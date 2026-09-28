@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}My Account | Finova Bank{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div>
+        <span class="eyebrow">ACCOUNT</span>
+        <h1>My Bank Account</h1>
+        <p class="muted">One customer can maintain one Finova bank account.</p>
+    </div>
+</div>
+
+{% if account %}
+<div class="detail-card">
+    <div class="detail-top">
+        <div>
+            <span class="pill">{{ account.get_account_type_display }}</span>
+            <h2>{{ account.account_number }}</h2>
+        </div>
+        <span class="badge success">{{ account.get_status_display }}</span>
+    </div>
+
+    <div class="big-number">₹{{ account.balance|floatformat:2 }}</div>
+
+    <div class="detail-grid">
+        <div><span>Minimum Balance</span><b>₹{{ account.minimum_balance|floatformat:2 }}</b></div>
+        <div><span>Opened</span><b>{{ account.created_at|date:"d M Y" }}</b></div>
+        <div><span>Account Type</span><b>{{ account.get_account_type_display }}</b></div>
+        <div><span>Account Status</span><b>{{ account.get_status_display }}</b></div>
+    </div>
+</div>
+{% else %}
+<div class="empty">
+    <h2>No Bank Account</h2>
+    <p>Open your single account to use banking services.</p>
+    <a class="btn primary" href="{% url 'create_account' %}">Open Bank Account</a>
+</div>
+{% endif %}
+{% endblock %}

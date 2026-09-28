@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Transactions | Finova Bank{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div><span class="eyebrow">ACTIVITY</span><h1>Transactions</h1><p class="muted">Banking history plus debit and credit card payments.</p></div>
+</div>
+
+{% if card_summary %}
+<div class="stats">
+    {% for item in card_summary %}
+    <div class="stat-card">
+        <span>{{ item.card.get_card_type_display }} · {{ item.card.masked_number }}</span>
+        <strong>₹{{ item.remaining|floatformat:2 }}</strong>
+        <small>Remaining monthly limit · Used ₹{{ item.used|floatformat:2 }} of ₹{{ item.card.monthly_limit|floatformat:2 }}</small>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if card_summary %}
+<div class="form-card" style="max-width:900px;margin:0 0 28px 0;">
+    <div class="section-head" style="margin-top:0;"><div><span class="eyebrow">CARD PAYMENTS</span><h2>Make a Debit/Credit Card Transaction</h2></div></div>
+    <p class="muted">The selected card's monthly limit is checked automatically. Debit-card payments also check your account's minimum balance.</p>
+    <form method="post">
+        {% csrf_token %}
+        {% if card_form.non_field_errors %}<div class="form-errors">{{ card_form.non_field_errors }}</div>{% endif %}
+        {% for field in card_form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}
+        </div>
+        {% endfor %}
+        <button class="btn primary" type="submit">Pay with Card</button>
+    </form>
+</div>
+{% else %}
+<div class="empty" style="margin-bottom:28px;">
+    <h2>No Active Cards</h2><p>Apply for a debit or credit card from the Cards page to make card transactions.</p>
+    {% if user.account %}<a class="btn primary" href="{% url 'cards' %}">View Cards</a>{% endif %}
+</div>
+{% endif %}
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>Reference</th><th>Type</th><th>Card</th><th>Amount</th><th>Description</th><th>Balance After</th><th>Status</th><th>Date</th></tr></thead>
+<tbody>
+{% for t in transactions %}
+<tr>
+<td>{{ t.reference }}</td>
+<td>{% if t.card_transaction_type %}{{ t.get_card_transaction_type_display }}{% else %}{{ t.get_transaction_type_display }}{% endif %}</td>
+<td>{% if t.card %}{{ t.card.masked_number }}{% else %}—{% endif %}</td>
+<td>₹{{ t.amount|floatformat:2 }}</td>
+<td>{{ t.description|default:"—" }}</td>
+<td>₹{{ t.balance_after|floatformat:2 }}</td>
+<td><span class="badge {% if t.status == 'SUCCESS' %}success{% else %}warning{% endif %}">{{ t.status }}</span></td>
+<td>{{ t.created_at|date:"d M Y, H:i" }}</td>
+</tr>
+{% empty %}<tr><td colspan="8" class="center">No transactions found.</td></tr>{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

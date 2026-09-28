@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Bank Admin Dashboard | Finova Bank{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div><span class="eyebrow">STAFF AREA</span><h1>Bank Administration</h1><p class="muted">Overview of the Finova banking database.</p></div>
+    <a class="btn secondary" href="/admin/">Open Django Admin</a>
+</div>
+
+<div class="stats">
+    <div class="stat-card dark"><span>Total Active Balance</span><strong>₹{{ total_balance|floatformat:2 }}</strong><small>All active accounts</small></div>
+    <div class="stat-card"><span>Users</span><strong>{{ users_count }}</strong><small>Registered users</small></div>
+    <div class="stat-card"><span>Accounts</span><strong>{{ accounts_count }}</strong><small>Bank accounts</small></div>
+    <div class="stat-card"><span>Transactions</span><strong>{{ transactions_count }}</strong><small>All transactions</small></div>
+    <div class="stat-card"><span>Cards</span><strong>{{ cards_count }}</strong><small>Debit + credit cards</small></div>
+    <div class="stat-card"><span>Loans</span><strong>{{ loans_count }}</strong><small>Applications</small></div>
+    <div class="stat-card"><span>Tickets</span><strong>{{ tickets_count }}</strong><small>Customer service</small></div>
+</div>
+
+<div class="section-head"><h2>Recent Transactions</h2></div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Reference</th><th>User</th><th>Account</th><th>Type</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+<tbody>
+{% for t in recent_transactions %}
+<tr>
+<td>{{ t.reference }}</td>
+<td>{{ t.user.username }}</td>
+<td>{{ t.account.account_number }}</td>
+<td>{{ t.get_transaction_type_display }}</td>
+<td>₹{{ t.amount|floatformat:2 }}</td>
+<td><span class="badge success">{{ t.status }}</span></td>
+<td>{{ t.created_at|date:"d M Y, H:i" }}</td>
+</tr>
+{% empty %}<tr><td colspan="7" class="center">No transactions.</td></tr>{% endfor %}
+</tbody>
+</table>
+</div>
+
+<div class="admin-links">
+    <a class="action" href="/admin/auth/user/">Users</a>
+    <a class="action" href="/admin/banking/bankaccount/">Bank Accounts</a>
+    <a class="action" href="/admin/banking/transaction/">Transactions</a>
+    <a class="action" href="/admin/banking/card/">Cards</a>
+    <a class="action" href="/admin/banking/loan/">Loans</a>
+    <a class="action" href="/admin/banking/supportticket/">Support Tickets</a>
+    <a class="action" href="/admin/banking/notification/">Notifications</a>
+</div>
+{% endblock %}

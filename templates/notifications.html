@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Notifications | Finova Bank{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">ALERTS</span><h1>Notifications</h1><p class="muted">Your recent banking alerts.</p></div></div>
+<div class="notification-list">
+{% for n in notifications %}
+<div class="notification-item">
+    <div class="notification-icon">!</div>
+    <div><strong>{{ n.title }}</strong><p>{{ n.message }}</p><small>{{ n.created_at|date:"d M Y, H:i" }}</small></div>
+</div>
+{% empty %}<div class="empty"><h2>No notifications</h2><p>You are all caught up.</p></div>{% endfor %}
+</div>
+{% endblock %}

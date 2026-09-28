@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Finova Bank{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div>
+        <span class="eyebrow">CUSTOMER DASHBOARD</span>
+        <h1>Hello, {{ user.first_name|default:user.username }} 👋</h1>
+        <p class="muted">Your banking activity at a glance.</p>
+    </div>
+    <a class="btn primary" href="{% if account %}{% url 'transfer' %}{% else %}{% url 'create_account' %}{% endif %}">
+        {% if account %}Transfer Money{% else %}Open Account{% endif %}
+    </a>
+</div>
+
+<div class="stats">
+    <div class="stat-card dark">
+        <span>Available Balance</span>
+        <strong id="live-balance">₹{{ total_balance|floatformat:2 }}</strong>
+        <small>Updates automatically</small>
+    </div>
+    <div class="stat-card">
+        <span>Bank Account</span>
+        <strong>{% if account %}1{% else %}0{% endif %}</strong>
+        <small>One account per customer</small>
+    </div>
+    <div class="stat-card">
+        <span>Notifications</span>
+        <strong id="live-notifications">{{ unread }}</strong>
+        <small>Unread alerts</small>
+    </div>
+</div>
+
+{% if account %}
+<div class="account-card large">
+    <div>
+        <span class="eyebrow light">FINOVA BANK</span>
+        <h2>{{ account.get_account_type_display }}</h2>
+        <p class="muted-light">{{ account.account_number }}</p>
+    </div>
+    <div class="account-balance">
+        <small>Current balance</small>
+        <strong id="account-card-balance">₹{{ account.balance|floatformat:2 }}</strong>
+    </div>
+    <div class="account-meta">
+        <span>Status <b>{{ account.get_status_display }}</b></span>
+        <span>Minimum balance <b>₹{{ account.minimum_balance|floatformat:2 }}</b></span>
+    </div>
+</div>
+{% else %}
+<div class="empty">
+    <h2>No bank account yet</h2>
+    <p>Create your single bank account to start depositing and transferring money.</p>
+    <a class="btn primary" href="{% url 'create_account' %}">Open Bank Account</a>
+</div>
+{% endif %}
+
+<div class="section-head">
+    <h2>Quick Actions</h2>
+</div>
+
+<div class="action-grid">
+    <a class="action" href="{% url 'deposit' %}"><span>＋</span><b>Deposit</b><small>Add money</small></a>
+    <a class="action" href="{% url 'withdraw' %}"><span>−</span><b>Withdraw</b><small>Withdraw funds</small></a>
+    <a class="action" href="{% url 'transfer' %}"><span>↗</span><b>Transfer</b><small>Send money</small></a>
+    <a class="action" href="{% url 'cards' %}"><span>▣</span><b>Cards</b><small>Debit & credit</small></a>
+    <a class="action" href="{% url 'loans' %}"><span>⌂</span><b>Loans</b><small>Manage loans</small></a>
+    <a class="action" href="{% url 'support' %}"><span>?</span><b>Support</b><small>Customer service</small></a>
+</div>
+
+<div class="section-head">
+    <h2>Recent Transactions</h2>
+    <a class="text-link" href="{% url 'transactions' %}">View all</a>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>Reference</th><th>Type</th><th>Amount</th><th>Balance After</th><th>Status</th><th>Date</th></tr></thead>
+<tbody>
+{% for t in recent %}
+<tr>
+    <td>{{ t.reference }}</td>
+    <td>{{ t.get_transaction_type_display }}</td>
+    <td>₹{{ t.amount|floatformat:2 }}</td>
+    <td>₹{{ t.balance_after|floatformat:2 }}</td>
+    <td><span class="badge success">{{ t.status }}</span></td>
+    <td>{{ t.created_at|date:"d M Y, H:i" }}</td>
+</tr>
+{% empty %}
+<tr><td colspan="6" class="center">No transactions yet.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

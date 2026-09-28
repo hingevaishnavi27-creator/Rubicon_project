@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} | Finova Bank{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <div>
+        <span class="eyebrow">FINOVA BANK</span>
+        <h1>{{ title }}</h1>
+        <p class="muted">Please enter the required information carefully.</p>
+    </div>
+</div>
+
+<div class="form-card">
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<small class="help-text">{{ field.help_text }}</small>{% endif %}
+            {% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}
+        </div>
+    {% endfor %}
+
+    <div class="form-actions">
+        <button class="btn primary" type="submit">{{ button }}</button>
+        <a class="btn secondary" href="{% url 'dashboard' %}">Cancel</a>
+    </div>
+</form>
+</div>
+{% endblock %}

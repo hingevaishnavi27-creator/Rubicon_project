@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Register | Finova Bank{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+    <div class="auth-card wide">
+        <span class="eyebrow">CUSTOMER REGISTRATION</span>
+        <h1>Create your profile</h1>
+        <p class="muted">Register first, then open your single Finova bank account.</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="two-col">
+                {% for field in form %}
+                    <div class="form-group {% if field.name == 'address' %}full-span{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="field-error">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button class="btn primary full" type="submit">Create Profile</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

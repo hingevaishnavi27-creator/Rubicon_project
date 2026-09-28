@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Finova Bank{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <span class="eyebrow">DIGITAL BANKING</span>
+        <h1>Simple, secure banking for your project.</h1>
+        <p>
+            Manage one bank account, transfer money, track transactions,
+            apply for cards and loans, and contact customer service from one dashboard.
+        </p>
+        <div class="hero-actions">
+            <a class="btn primary" href="{% url 'register' %}">Create Customer Account</a>
+            <a class="btn secondary" href="{% url 'login' %}">Customer Login</a>
+        </div>
+    </div>
+
+    <div class="hero-panel">
+        <div class="mini-label">BANKING AT A GLANCE</div>
+        <div class="hero-balance">₹ 25,000.00</div>
+        <div class="mini-row"><span>Account</span><strong>SB••••••9012</strong></div>
+        <div class="mini-row"><span>Status</span><strong class="green">Active</strong></div>
+        <div class="mini-row"><span>Cards</span><strong>Debit + Credit</strong></div>
+    </div>
+</section>
+
+<section class="feature-grid">
+    <div class="feature"><b>01</b><h3>One Account</h3><p>Each customer can maintain one bank account.</p></div>
+    <div class="feature"><b>02</b><h3>Fast Transfers</h3><p>Transfer funds between Finova customer accounts.</p></div>
+    <div class="feature"><b>03</b><h3>Card Management</h3><p>One debit and one credit card per account.</p></div>
+    <div class="feature"><b>04</b><h3>Live Dashboard</h3><p>Balance and notification data refresh automatically.</p></div>
+</section>
+{% endblock %}

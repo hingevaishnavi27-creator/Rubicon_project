@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Loans | Finova Bank{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div><span class="eyebrow">CREDIT</span><h1>Loans</h1><p class="muted">Loan applications are checked against the configured salary and card-usage criteria before submission.</p></div>
+    <a class="btn primary" href="{% url 'apply_loan' %}">+ Apply for Loan</a>
+</div>
+<div class="detail-card" style="margin-bottom:28px;">
+    <h2>Eligibility Conditions</h2>
+    <p class="muted">When you apply, you will enter your monthly salary on the application form. Finova checks that salary against the selected loan's minimum salary and salary-based loan limit, and also checks your active card's monthly limit and current-month usage. The entered salary is saved with the application as a snapshot. These are configurable demo rules, not a real-world lending decision.</p>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Type</th><th>Salary</th><th>Amount</th><th>Interest</th><th>Tenure</th><th>Outstanding</th><th>Status</th><th>Applied</th></tr></thead>
+<tbody>
+{% for loan in loans %}
+<tr>
+<td>{{ loan.get_loan_type_display }}</td><td>₹{{ loan.monthly_salary|floatformat:2 }}</td><td>₹{{ loan.amount|floatformat:2 }}</td><td>{{ loan.interest_rate }}%</td><td>{{ loan.tenure_months }} months</td><td>₹{{ loan.outstanding_amount|floatformat:2 }}</td><td><span class="badge">{{ loan.status }}</span></td><td>{{ loan.applied_at|date:"d M Y" }}</td>
+</tr>
+{% empty %}<tr><td colspan="8" class="center">No loan applications.</td></tr>{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Cards | Finova Bank{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div><span class="eyebrow">CARDS</span><h1>My Cards</h1><p class="muted">Maximum one debit card and one credit card per account.</p></div>
+    {% if user.account %}<a class="btn primary" href="{% url 'apply_card' %}">+ Apply for Card</a>{% endif %}
+</div>
+
+<div class="card-grid">
+{% for card in cards %}
+<div class="bank-card">
+    <div class="card-header"><span>FINOVA BANK</span><span>{{ card.get_card_type_display }}</span></div>
+    <div class="chip">▦</div>
+    <div class="card-number">{{ card.masked_number }}</div>
+    <div class="card-bottom">
+        <div><small>CARD HOLDER</small><strong>{{ user.get_full_name|default:user.username|upper }}</strong></div>
+        <div><small>EXPIRY</small><strong>{{ card.expiry_date|date:"m/y" }}</strong></div>
+    </div>
+    <div class="card-status">{{ card.get_status_display }} · Monthly limit ₹{{ card.monthly_limit|floatformat:0 }}</div>
+</div>
+{% empty %}
+<div class="empty">
+    <h2>No Cards Yet</h2>
+    <p>You may have one debit card and one credit card.</p>
+    {% if user.account %}<a class="btn primary" href="{% url 'apply_card' %}">Apply for Card</a>{% else %}<p>Open a bank account first.</p>{% endif %}
+</div>
+{% endfor %}
+</div>
+{% endblock %}

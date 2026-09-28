@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Profile | Finova Bank{% endblock %}
+{% block content %}
+<div class="page-head"><div><span class="eyebrow">PROFILE</span><h1>Customer Profile</h1><p class="muted">Manage your contact details and monthly salary used for loan eligibility checks.</p></div></div>
+<div class="form-card">
+    <div class="profile-summary">
+        <strong>{{ user.get_full_name|default:user.username }}</strong>
+        <span>{{ user.email }}</span>
+        <span>Customer ID: {{ profile.customer_id|default:"Not generated yet" }}</span>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}
+        </div>
+        {% endfor %}
+        <button class="btn primary" type="submit">Save Profile</button>
+    </form>
+</div>
+{% endblock %}
